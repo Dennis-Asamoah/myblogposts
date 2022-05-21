@@ -2,8 +2,8 @@ from rest_framework.serializers import ModelSerializer
 from baseapp.models import Post, User
 from rest_framework import serializers
 
-c=Post.objects.get(id=1)
-c.author.add(1)
+#c=Post.objects.get(id=1)
+#c.author.add(1)
 class PostSerializer(ModelSerializer):
     
     class Meta:
@@ -17,11 +17,16 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ['id','email', 'username'] 
 
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('passsword', instance.password)
+        print('helloooo')
+        return instance    
+
 
 class PostSerializer1(ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(read_only=True, many=False)
     #author = serializers.StringRelatedField()
-    author = UserSerializer(read_only=True, many=True)
+    author = UserSerializer(read_only=True, many=False)
     #print(author)
     class Meta:
         model = Post
@@ -39,4 +44,6 @@ class UserSerializer1(ModelSerializer):
         fields = ['id','email', 'username', 'author',] 
 
 
-    
+class UserPostSerialiser(serializers.Serializer):
+    user_serializer = UserSerializer(many=True)
+    posts_serializer = PostSerializer(many=True)

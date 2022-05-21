@@ -1,4 +1,3 @@
-import email
 from django.test import TestCase
 from django.urls import reverse
 
@@ -28,6 +27,10 @@ class TestCreatePost(TestCase):
         self.assertEqual(post.description, 'drf is great')
         self.assertEqual(post.author, author) 
         self.assertEqual(str(author), 'obide1@yahoo.com')
+
+    def test_post_error(self):
+        post = {'name':'java'}
+
 
     def test_update(self):
         post = Post.objects.get(id=1)

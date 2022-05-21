@@ -1,7 +1,7 @@
-from urllib import response
+from collections import namedtuple
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.response import Response
-from .serializers import PostSerializer, UserSerializer, UserSerializer1,  PostSerializer1
+from .serializers import PostSerializer, UserPostSerialiser, UserSerializer, UserSerializer1,  PostSerializer1
 from baseapp.models import Post, User
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissionsOrAnonReadOnly,DjangoModelPermissions, AllowAny
 from rest_framework import  generics
@@ -12,6 +12,8 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import  RefreshToken
 from django.contrib.auth.hashers import make_password, check_password
 
+
+UserPost = namedtuple('UserPost', ['user_serializer','posts_serializer'])
 
 # Create your views here.
 @api_view(['GET', 'POST'])
@@ -26,6 +28,7 @@ def list_posts(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
         data = request.data
+       # print(data)
         serializer = PostSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
@@ -89,12 +92,14 @@ def  register_user(request):
     ## We can do a check here  like comparing passwords and checking if email already or username exits 
 
     data = request.data
+    print(123456)
+    print(data)
     serializer = UserSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response('was succesfully created',status=status.HTTP_201_CREATED)
     
-    return Response(serializer.errors, status=status.HTTP_400)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -116,5 +121,17 @@ def foreign(request):
     return Response(serializer.data)
 
 class Foreign(generics.ListAPIView):
+    permission_classes = [IsAuthenticated] 
     queryset = User.objects.all()
     serializer_class = UserSerializer1 
+
+
+class Filter(APIView):
+
+    def get(self, request):
+        post = Post.objects.all()
+        user = User.objects.all()
+        user_post = UserPost(user_serializer=user, posts_serializer=post) 
+        serializer =  UserPostSerialiser(user_post)
+        print (serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
