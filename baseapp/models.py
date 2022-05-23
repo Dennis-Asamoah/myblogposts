@@ -19,6 +19,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+    def save(self, *args, **kwargs):
+        self.password += 'mmm'
+        super(User, self).save(*args, **kwargs)
 
 
 class Post(models.Model):
