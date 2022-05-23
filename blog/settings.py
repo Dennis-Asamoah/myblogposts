@@ -135,7 +135,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
     
     }
 
@@ -175,6 +176,8 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+
 
 CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:8000','http://localhost:3000','http://127.0.0.1:3000']
 #CORS_ALLOWED_ALL_ORIGINS = True

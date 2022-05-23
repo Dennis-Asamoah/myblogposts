@@ -1,3 +1,4 @@
+from click import password_option
 from rest_framework.serializers import ModelSerializer
 from baseapp.models import Post, User
 from rest_framework import serializers
@@ -15,14 +16,26 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','email', 'username'] 
+        fields = ['id','email', 'username', 'password']
 
+    def create(self, validated_data):
+        # password = validated_data['password']
+        instance = self.Meta.model(**validated_data)
+        # password = validated_data.pop('password')
+        # print(password)
+        # validated_data['password'] = 101233
+        instance.set_password('8888')
+        print(validated_data)
+        instance.save()
+        return instance
+    
     def update(self, instance, validated_data):
-        instance.email = validated_data.get('passsword', instance.password)
-        print('helloooo')
-        return instance    
+        print(validated_data.get('email', instance.email))
+        instance.email = validated_data.get('email', instance.email) + 'm'
+        instance.save()
+        return instance
 
-
+        
 class PostSerializer1(ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(read_only=True, many=False)
     #author = serializers.StringRelatedField()

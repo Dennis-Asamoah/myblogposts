@@ -81,7 +81,7 @@ def detailed_view(request,id):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         post.delete()
         return Response('post was deleted succesfully')
@@ -134,4 +134,25 @@ class Filter(APIView):
         user_post = UserPost(user_serializer=user, posts_serializer=post) 
         serializer =  UserPostSerialiser(user_post)
         print (serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK) 
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RegisterUser(APIView):
+    def post(self, request):
+        data = request.data 
+        serializer =  UserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUES)
+
+class Authors(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class AuthorView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+ 
