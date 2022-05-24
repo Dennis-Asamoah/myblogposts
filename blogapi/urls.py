@@ -17,5 +17,6 @@ urlpatterns = [
     path('register_user/', views.RegisterUser.as_view(), name='registeruser'),
     path('users/', views.Authors.as_view(), name='authors'),
     path('users/<int:pk>', views.AuthorView.as_view(), name='authorview'),
-
+    path('listitems/<slug:slug>', views.PostItems.as_view(), name='listitems'),
+    path('listitem/<slug:slug>', views.list_detail, name='listitem'),
 ]

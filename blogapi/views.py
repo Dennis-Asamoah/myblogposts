@@ -1,4 +1,5 @@
 from collections import namedtuple
+from urllib import response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.response import Response
 from .serializers import PostSerializer, UserPostSerialiser, UserSerializer, UserSerializer1,  PostSerializer1
@@ -154,5 +155,30 @@ class Authors(generics.ListCreateAPIView):
 class AuthorView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class PostItems(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    slug_url_kwarg = 'slug'
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def list_detail(request, slug):
+    post = Post.objects.get(slug=slug)
+    if request.method == 'GET':
+        serializer = PostSerializer(post, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        serializer = PostSerializer(instance=post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        post.delete()
+        return Response('deleted', status=status.HTTP_200_OK)
+
+
+
 
  

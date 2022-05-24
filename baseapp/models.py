@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import  slugify
 
 
 options = (
@@ -33,9 +34,16 @@ class Post(models.Model):
     image = models.ImageField(upload_to='image', null=True, blank=True) #, default='den.jpg')
     date_posted = models.DateTimeField(auto_now = True)
     published = models.CharField(max_length=200,choices=options,null=True, blank=True)
+    slug = models.SlugField(null=True, unique=True, blank=True)
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name) + '-me'
+            print(self.slug )
+            super(Post, self).save(*args, **kwargs)
 
 
 
