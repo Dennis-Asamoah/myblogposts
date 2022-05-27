@@ -18,7 +18,7 @@ UserPost = namedtuple('UserPost', ['user_serializer','posts_serializer'])
 
 # Create your views here.
 @api_view(['GET', 'POST'])
-#@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 #@parser_classes([MultiPartParser, FormParser])
 def list_posts(request):
     
