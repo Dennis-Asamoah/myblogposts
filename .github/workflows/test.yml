@@ -3,11 +3,11 @@ name: Django2
 on:
   push:
     branches:
-      - main
+      - master
 
-  pull_request2:
+  pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
