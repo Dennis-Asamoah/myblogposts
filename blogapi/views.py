@@ -62,11 +62,13 @@ class ListPost(generics.RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class  = PostSerializer
     #permission_classes = [DjangoModelPermissions]
-       
+
+
 class DetailedView(generics.RetrieveDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class  = PostSerializer
     #permission_classes = [DjangoModelPermissions]
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 #@permission_classes([DjangoModelPermissions])
@@ -86,6 +88,7 @@ def detailed_view(request,id):
     else:
         post.delete()
         return Response('post was deleted succesfully')
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])    
